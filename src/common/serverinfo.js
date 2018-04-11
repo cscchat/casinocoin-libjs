@@ -40,14 +40,14 @@ function renameKeys(object, mapping) {
 }
 
 function getServerInfo(connection: Connection): Promise < GetServerInfoResponse > {
-    return connection.request({ command: 'server_state' }).then(response => {
-        const info = convertKeysFromSnakeCaseToCamelCase(response.state)
-        // renameKeys(info, { hostid: 'hostID' })
+    return connection.request({ command: 'server_info' }).then(response => {
+        const info = convertKeysFromSnakeCaseToCamelCase(response.info)
+        renameKeys(info, { hostid: 'hostID' })
         if (info.validatedLedger) {
             renameKeys(info.validatedLedger, {
-                baseFee: 'baseFeeCSC',
-                reserveBase: 'reserveBaseCSC',
-                reserveInc: 'reserveIncrementCSC',
+                baseFeeCsc: 'baseFeeCSC',
+                reserveBaseCsc: 'reserveBaseCSC',
+                reserveIncCsc: 'reserveIncrementCSC',
                 seq: 'ledgerVersion'
             })
             info.validatedLedger.baseFeeCSC = dropsToCsc(info.validatedLedger.baseFeeCSC.toString())
